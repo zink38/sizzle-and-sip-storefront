@@ -72,22 +72,27 @@ function CollectionItem({
   index: number;
 }) {
   return (
-    <Link
-      className="collection-item"
-      key={collection.id}
-      to={`/collections/${collection.handle}`}
-      prefetch="intent"
-    >
-      {collection?.image && (
-        <Image
-          alt={collection.image.altText || collection.title}
-          aspectRatio="1/1"
-          data={collection.image}
-          loading={index < 3 ? 'eager' : undefined}
-        />
-      )}
-      <h5>{collection.title}</h5>
-    </Link>
+    <div className="collection-item">
+      <Link
+        key={collection.id}
+        to={`/collections/${collection.handle}`}
+        prefetch="intent"
+      >
+        {collection?.image && (
+          <Image
+            alt={collection.image.altText || collection.title}
+            aspectRatio="1/1"
+            data={collection.image}
+            loading={index < 3 ? 'eager' : undefined}
+          />
+        )}
+        <h5>{collection.title}</h5>
+      </Link>
+      <details>
+        <summary>View Collection</summary>
+        <p>{collection.description}</p>
+      </details>
+    </div>
   );
 }
 
@@ -103,6 +108,7 @@ const COLLECTIONS_QUERY = `#graphql
       width
       height
     }
+    description
   }
   query StoreCollections(
     $country: CountryCode
