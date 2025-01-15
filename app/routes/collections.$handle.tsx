@@ -5,14 +5,31 @@ import {
   Image,
   Money,
   Analytics,
+  getSeoMeta,
 } from '@shopify/hydrogen';
 import type {ProductItemFragment} from 'storefrontapi.generated';
 import {useVariantUrl} from '~/lib/variants';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
-  return [{title: `Hydrogen | ${data?.collection.title ?? ''} Collection`}];
+// Define the type for the `seo` object
+type SeoData = {
+  title: string;
+  description: string;
+  // Add other fields if needed
 };
+
+// Define the type for `match.data`
+type MatchData = {
+  seo: SeoData;
+};
+
+// Define the `MetaFunction` with proper typing
+export const meta: MetaFunction = ({matches}) => {
+  return getSeoMeta(
+    ...matches.map((match) => (match.data as MatchData).seo)
+  );
+};
+
 
 export async function loader(args: LoaderFunctionArgs) {
   // Start fetching non-critical data without blocking time to first byte
@@ -20,8 +37,19 @@ export async function loader(args: LoaderFunctionArgs) {
 
   // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
+  
+  
+  
 
-  return defer({...deferredData, ...criticalData});
+  return defer({
+    ...deferredData, 
+    ...criticalData, 
+    seo: {
+      title: criticalData.collection.title,
+      description: criticalData.collection.description,
+      // ...this could also include image URLs, prices, and more
+    },
+  });
 }
 
 /**
@@ -56,11 +84,11 @@ async function loadCriticalData({
     });
   }
 
-// Generate the SEO data for the collection page
-  const seo = generateSEO(collection);
+
 
   return ({
-    collection, seo
+    collection,
+    
   });
 }
 
@@ -72,28 +100,6 @@ async function loadCriticalData({
 function loadDeferredData({context}: LoaderFunctionArgs) {
   return {};
 }
-
-//Function to generate SEO data for the collection page
-
-const generateSEO = (collection: any) => {
-  let seo = {
-    //Default title in case the collection doesn't have a title
-    title: 'Default Collection Title',  
-    //Default description in case the collection doesn't have a description
-    description: 'Default Collection Description',
-  };
-
-  if (collection) {
-    //If collection has title and description, use them for SEO
-    seo.title = collection.title || seo.title;
-    seo.description = collection.description || seo.description;
-  }
-
-  //Truncate the description to 155 characters if needed
-  seo.description = seo.description.length > 155 ? `${seo.description.slice(0, 152)}...` : seo.description;
-
-  return seo;
-};
 
 export default function Collection() {
   const {collection} = useLoaderData<typeof loader>();

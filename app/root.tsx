@@ -1,5 +1,4 @@
-import {Seo} from '@shopify/hydrogen';
-import {useNonce, getShopAnalytics, Analytics} from '@shopify/hydrogen';
+import {useNonce, getShopAnalytics, Analytics, getSeoMeta} from '@shopify/hydrogen';
 import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {
   Links,
@@ -11,6 +10,7 @@ import {
   ScrollRestoration,
   isRouteErrorResponse,
   type ShouldRevalidateFunction,
+  type MetaFunction,
 } from '@remix-run/react';
 import favicon from '~/assets/favicon.svg';
 import resetStyles from '~/styles/reset.css?url';
@@ -79,8 +79,18 @@ export async function loader(args: LoaderFunctionArgs) {
       country: args.context.storefront.i18n.country,
       language: args.context.storefront.i18n.language,
     },
+    seo: {
+      title: "Sizzle & Sip",
+      description: "Premium fruit drinks, bubble tea, hot dogs, sausages",
+    },
   });
 }
+
+// Pass the loader data to the meta export
+export const meta: MetaFunction<typeof loader> = ({data}) => {
+  // pass your SEO object to getSeoMeta()
+  return getSeoMeta(data!.seo);
+};
 
 /**
  * Load data necessary for rendering content above the fold. This is the critical data
@@ -139,7 +149,6 @@ export function Layout({children}: {children?: React.ReactNode}) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <Seo />
         <Meta />
         <Links />
       </head>
