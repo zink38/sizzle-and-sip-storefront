@@ -75,7 +75,7 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
 
 //Function to generate SEO data for the collection page
 
-const generateSEO = (collection: ReturnType<typeof useLoaderData<typeof loader>>['collection']) => {
+const generateSEO = (collection: any) => {
   let seo = {
     //Default title in case the collection doesn't have a title
     title: 'Default Collection Title',  
