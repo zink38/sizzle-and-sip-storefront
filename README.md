@@ -1,3 +1,8 @@
+Completed [Shopify Academy Develop with Hydrogen courses](https://www.shopifyacademy.com/build-a-custom-storefront-with-hydrogen)
+
+This Will serve as the Framework to build Sizzle & Sip Website. 
+
+
 # Hydrogen template: Skeleton
 
 Hydrogen is Shopify’s stack for headless commerce. Hydrogen is designed to dovetail with [Remix](https://remix.run/), Shopify’s full stack web framework. This template contains a **minimal setup** of components, queries and tooling to get started with Hydrogen.
